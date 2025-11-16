@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRYON - AI Virtual Fashion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 135, 0.1);
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover {
+            color: #00ff87;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 40px 80px;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 255, 135, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(96, 239, 255, 0.1) 0%, transparent 50%),
+                        #000;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 135, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 135, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(3em, 8vw, 6em);
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, #fff 0%, #00ff87 50%, #60efff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: clamp(1.1em, 2vw, 1.4em);
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 50px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            color: #000;
+            padding: 20px 60px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 40px rgba(0, 255, 135, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-primary:hover::before {
+            left: 100%;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 255, 135, 0.5);
+        }
+
+        .cta-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Steps Section */
+        .steps-section {
+            padding: 100px 40px;
+            background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2em, 5vw, 3.5em);
+            font-weight: 900;
+            margin-bottom: 80px;
+            letter-spacing: -2px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, rgba(0, 255, 135, 0.05) 0%, rgba(96, 239, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 135, 0.2);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(0, 255, 135, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .step-card:hover::before {
+            opacity: 1;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ff87;
+            box-shadow: 0 20px 60px rgba(0, 255, 135, 0.2);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 2em;
+            margin: 0 auto 30px;
+            color: #000;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .step-card p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            padding: 100px 40px;
+            background: #000;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .upload-container {
+            background: linear-gradient(135deg, rgba(0, 255, 135, 0.05) 0%, rgba(96, 239, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 135, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .upload-title {
+            font-size: 1.5em;
+            font-weight: 900;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+
+        .upload-zone {
+            border: 3px dashed rgba(0, 255, 135, 0.3);
+            border-radius: 15px;
+            padding: 60px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .upload-zone:hover {
+            border-color: #00ff87;
+            background: rgba(0, 255, 135, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .upload-zone h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .upload-zone p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 135, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-preview p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9em;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 255, 135, 0.1);
+            border-top: 5px solid #00ff87;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #generateBtn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .processing {
+            color: #00ff87;
+            font-weight: 700;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 40px;
+            background: #0a0a0a;
+            text-align: center;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+        }
+
+        .stat-card {
+            padding: 40px;
+        }
+
+        .stat-number {
+            font-size: clamp(2.5em, 5vw, 4em);
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            background: #000;
+            border-top: 1px solid rgba(0, 255, 135, 0.2);
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 20px;
+                font-size: 0.8em;
+            }
+            
+            .nav {
+                padding: 0 20px;
+            }
+            
+            .hero {
+                padding: 120px 20px 60px;
+            }
+            
+            .steps-section,
+            .demo-section,
+            .stats-section {
+                padding: 60px 20px;
+            }
+            
+            .upload-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">TRYON</div>
+            <ul class="nav-links">
+                <li><a href="#how">HOW IT WORKS</a></li>
+                <li><a href="#demo">TRY IT</a></li>
+                <li><a href="#stats">STATS</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="grid-overlay"></div>
+        <div class="hero-content">
+            <h1>THE FUTURE OF VIRTUAL TRY-ON</h1>
+            <p>Experience AI-Powered Fashion Technology</p>
+            <button class="cta-primary" onclick="scrollToSection('demo')">START NOW</button>
+        </div>
+    </section>
+
+    <section class="steps-section" id="how">
+        <div class="container">
+            <h2 class="section-title">THREE STEPS TO PERFECT FIT</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h3>UPLOAD PERSON</h3>
+                    <p>Start by uploading a clear, full-body photo of yourself or a model. Our AI works with any pose or background.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h3>UPLOAD CLOTHING</h3>
+                    <p>Add your clothing product image. T-shirts, dresses, jackets - our technology handles any garment type.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h3>GENERATE RESULT</h3>
+                    <p>Watch as our AI creates photorealistic try-on images in seconds. Download and use instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <h2 class="section-title">TRY IT NOW</h2>
+            <div class="demo-container">
+                <!-- Person Upload -->
+                <div class="upload-container">
+                    <h2 class="upload-title">PERSON PHOTO</h2>
+                    <div class="upload-zone" onclick="document.getElementById('personUpload').click()">
+                        <span class="upload-icon">👤</span>
+                        <h3>Upload Person</h3>
+                        <p>Front-facing, full body</p>
+                        <input type="file" id="personUpload" style="display: none;" accept="image/*">
+                    </div>
+                    <div id="personPreview" class="image-preview">
+                        <p>No image selected</p>
+                    </div>
+                </div>
+
+                <!-- T-shirt Upload -->
+                <div class="upload-container">
+                    <h2 class="upload-title">T-SHIRT IMAGE</h2>
+                    <div class="upload-zone" onclick="document.getElementById('tshirtUpload').click()">
+                        <span class="upload-icon">👕</span>
+                        <h3>Upload T-Shirt</h3>
+                        <p>Clear product photo</p>
+                        <input type="file" id="tshirtUpload" style="display: none;" accept="image/*">
+                    </div>
+                    <div id="tshirtPreview" class="image-preview">
+                        <p>No image selected</p>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div class="upload-container">
+                    <h2 class="upload-title">RESULT</h2>
+                    <div class="result-container">
+                        <div id="resultPreview" class="image-preview">
+                            <p>Result will appear here</p>
+                        </div>
+                        <button id="generateBtn" class="cta-primary" onclick="generateResult()" disabled>GENERATE TRY-ON</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section" id="stats">
+        <div class="container">
+            <h2 class="section-title">POWERED BY 3Idiots</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">99.8%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">&lt; 3s</div>
+                    <div class="stat-label">Generation Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500K+</div>
+                    <div class="stat-label">Images Created</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 TRYON. All rights reserved. Powered by Advanced AI Technology.</p>
+    </footer>
+
+    <script>
+        let personImage = null;
+        let tshirtImage = null;
+        let personPreviewImage = null;
+        let tshirtPreviewImage = null;
+        let currentPersonPreview = null;
+        let currentTshirtPreview = null;
+
+        // Smooth scrolling
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Handle person photo upload
+        document.getElementById('personUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    personImage = event.target.result;
+                    const preview = document.getElementById('personPreview');
+                    preview.innerHTML = '';
+                    personPreviewImage = new Image();
+                    personPreviewImage.src = event.target.result;
+                    personPreviewImage.alt = "Person photo";
+                    personPreviewImage.style.maxWidth = "100%";
+                    personPreviewImage.style.maxHeight = "100%";
+                    personPreviewImage.style.objectFit = "contain";
+                    preview.appendChild(personPreviewImage);
+                    currentPersonPreview = preview.innerHTML;
+                    updateGenerateButton();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handle t-shirt image upload
+        document.getElementById('tshirtUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    tshirtImage = event.target.result;
+                    const preview = document.getElementById('tshirtPreview');
+                    preview.innerHTML = '';
+                    tshirtPreviewImage = new Image();
+                    tshirtPreviewImage.src = event.target.result;
+                    tshirtPreviewImage.alt = "T-shirt image";
+                    tshirtPreviewImage.style.maxWidth = "100%";
+                    tshirtPreviewImage.style.maxHeight = "100%";
+                    tshirtPreviewImage.style.objectFit = "contain";
+                    preview.appendChild(tshirtPreviewImage);
+                    currentTshirtPreview = preview.innerHTML;
+                    updateGenerateButton();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Enable/disable generate button
+        function updateGenerateButton() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = !(personImage && tshirtImage);
+        }
+
+        // Generate virtual try-on result
+        async function generateResult() {
+            if (!personImage || !tshirtImage) return;
+
+            const resultPreview = document.getElementById('resultPreview');
+            const generateBtn = document.getElementById('generateBtn');
+            const originalTshirtPreview = document.getElementById('tshirtPreview').innerHTML;
+            
+            generateBtn.disabled = true;
+            resultPreview.innerHTML = '<div class="loading-spinner"></div><p class="processing">⚡ Processing your images...</p>';
+
+            try {
+                console.log("Sending images to server...");
+                console.log("Person image length:", personImage.length);
+                console.log("T-shirt image length:", tshirtImage.length);
+                
+                const response = await fetch('http://localhost:5000/try-on', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        person_image: personImage,
+                        cloth_image: tshirtImage
+                    })
+                });
+
+                console.log("Server response status:", response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                let data;
+                try {
+                    const textData = await response.text();
+                    console.log("Raw response:", textData.substring(0, 100) + "...");
+                    data = JSON.parse(textData);
+                } catch (e) {
+                    console.error("Failed to parse response:", e);
+                    throw new Error("Invalid response from server");
+                }
+
+                console.log("Received response data type:", typeof data);
+                console.log("Response data keys:", Object.keys(data));
+
+                if (data.error) {
+                    console.error("Server error:", data.error);
+                    throw new Error(data.error);
+                }
+
+                if (!data.result || typeof data.result !== 'string') {
+                    console.error("Invalid result data:", data);
+                    throw new Error("No valid result image received from server");
+                }
+
+                console.log("Success! Creating result image...");
+                const resultImage = new Image();
+                resultImage.onload = function() {
+                    console.log("Result image loaded successfully");
+                    resultPreview.innerHTML = '';
+                    resultImage.style.maxWidth = "100%";
+                    resultImage.style.maxHeight = "100%";
+                    resultImage.style.objectFit = "contain";
+                    resultPreview.appendChild(resultImage);
+                };
+                resultImage.onerror = function(e) {
+                    console.error("Failed to load result image:", e);
+                    throw new Error("Failed to load result image");
+                };
+                resultImage.src = data.result;
+                resultImage.alt = "Try-on result";
+
+            } catch (error) {
+                console.error("Error:", error);
+                resultPreview.innerHTML = `
+                    <div style="padding: 40px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 20px;">❌</div>
+                        <h3 style="margin-bottom: 10px; color: #ff4444;">Error</h3>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9em;">
+                            ${error.message || 'Failed to generate try-on result'}<br><br>
+                            Please make sure:<br>
+                            1. The server is running (python model.py)<br>
+                            2. Person image is full body, front-facing<br>
+                            3. T-shirt image is clear and isolated
+                        </p>
+                    </div>
+                `;
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
